@@ -74,6 +74,8 @@ public class AuthService {
             throw new InvalidCredentailsException();
         }
 
+        // TODO [FLIX-123]: check verification and enabled status
+
         return generateToken(user.getId(), user.getUsername(), user.getRoles());
 
     }
@@ -90,6 +92,8 @@ public class AuthService {
                 .email(registerRequest.email())
                 .authProviders(Set.of(AuthProvider.LOCAL))
                 .password(passwordEncoder.encode(registerRequest.password()))
+                .isVerified(false)
+                .isEnabled(false)
                 .build();
     }
 
