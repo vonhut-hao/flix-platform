@@ -9,10 +9,8 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,15 +21,17 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/register/normal")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AuthResponse> registerForNormalUser(@RequestBody @Valid RegisterRequest request) {
         var authResponse = authService.registerForNormalUser(request);
-        return ApiResponse.success(authResponse);
+        return ApiResponse.success(authResponse, HttpStatus.CREATED, "Normal user registered successfully");
     }
 
     @PostMapping("/register/vip")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<AuthResponse> registerForVipUser(@RequestBody @Valid RegisterRequest request) {
         var authResponse = authService.registerForVIPUser(request);
-        return ApiResponse.success(authResponse);
+        return ApiResponse.success(authResponse, HttpStatus.CREATED, "VIP user registered successfully");
     }
 
     @PostMapping("/login")

@@ -12,6 +12,7 @@
         <module>common</module>
         <module>app</module>
         <module>identity</module>
+        <module>flix-integration-test</module>
     </modules>
 
     <properties>
@@ -25,6 +26,12 @@
         <mysql-connector-j.version>8.0.33</mysql-connector-j.version>
         <flyway.version>9.16.3</flyway.version>
         <io.awspring.cloud.version>4.0.0</io.awspring.cloud.version>
+        <groovy.version>5.0.0</groovy.version>
+        <spock.version>2.4-groovy-5.0</spock.version>
+        <gmavenplus.version>4.3.1</gmavenplus.version>
+        <mysql.testcontainers.version>1.19.8</mysql.testcontainers.version>
+        <restassured.version>5.5.0</restassured.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
     </properties>
 
     <dependencies>
@@ -38,18 +45,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
 
         <dependency>
@@ -83,11 +83,45 @@
             </dependency>
 
             <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${mysql.testcontainers.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.groovy</groupId>
+                <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.spockframework</groupId>
+                <artifactId>spock-core</artifactId>
+                <version>${spock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.spockframework</groupId>
+                <artifactId>spock-spring</artifactId>
+                <version>${spock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>io.awspring.cloud</groupId>
                 <artifactId>spring-cloud-aws-dependencies</artifactId>
                 <version>${io.awspring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${restassured.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
@@ -122,6 +156,30 @@
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.gmavenplus</groupId>
+                    <artifactId>gmavenplus-plugin</artifactId>
+                    <version>${gmavenplus.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>addTestSources</goal>
+                                <goal>compileTests</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <includes>
+                            <include>**/*Spec.groovy</include>
+                            <include>**/*Spec.java</include>
+                        </includes>
+                    </configuration>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -19,3 +19,7 @@ identity:
     expiration-seconds: 360000
   oauth2:
     redirect-url: "http://localhost:5173/oauth2/callback"
+
+local:
+  server:
+    port: 8080

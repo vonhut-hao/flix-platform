@@ -90,6 +90,8 @@ public class AuthService {
                 .email(registerRequest.email())
                 .authProviders(Set.of(AuthProvider.LOCAL))
                 .password(passwordEncoder.encode(registerRequest.password()))
+                .isVerified(true)
+                .isEnabled(true)
                 .build();
     }
 
