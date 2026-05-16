@@ -1,11 +1,11 @@
 package com.flix.identity.auth.service;
 
 import com.flix.common.enums.Role;
-import com.flix.identity.dao.entity.User;
-import com.flix.identity.dao.entity.UserProfile;
-import com.flix.identity.auth.enums.AuthProvider;
-import com.flix.identity.dao.repository.UserProfileRepository;
-import com.flix.identity.dao.repository.UserRepository;
+import com.flix.identity.common.enums.AuthProvider;
+import com.flix.identity.entity.User;
+import com.flix.identity.entity.UserProfile;
+import com.flix.identity.dao.UserProfileRepository;
+import com.flix.identity.dao.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

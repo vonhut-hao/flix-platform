@@ -15,7 +15,10 @@
 ## Backend architecture
 - Boot entry point: `be/app/src/main/java/com/flix/app/FlixPlaftformApplication.java`.
 - `common` module contains shared DTOs and common configuration/utilities.
-- `identity` module contains authentication/authorization logic.
+- `identity` module contains authentication/authorization logic with package split:
+  - `api`: REST controllers (e.g., auth/user endpoints)
+  - `auth`: auth/security config, DTOs, services, handlers
+  - `dao`: persistence entities and repositories
 - `app` module wires runtime application concerns and imports identity/common configuration.
 - Integration tests live in `be/flix-integration-test` (Spock + Testcontainers + Rest Assured).
 
@@ -44,4 +47,8 @@
 ## PR workflow helper
 - PR authoring and update guidance is in:
   - `.github/copilot/skills/CREATE_OR_UPDATE_PR.md`
+
+## Issue workflow helper
+- Issue authoring and update guidance is in:
+  - `.github/skills/CREATE_OR_UPDATE_ISSUE.md`
 

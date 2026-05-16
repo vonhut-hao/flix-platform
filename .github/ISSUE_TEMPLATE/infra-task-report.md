@@ -7,6 +7,8 @@ labels: 'type: infra-task'
 ---
 
 ### Job Description
+### Basic Design
+### Tech Notes
 ### Acceptance Criteria
 - [ ] Criteria 1
 - [ ] Criteria 2

@@ -2,9 +2,9 @@ package com.flix.identity.auth.handler;
 
 import com.flix.identity.auth.config.AuthConfig;
 import com.flix.identity.auth.service.AuthService;
-import com.flix.identity.auth.dto.AuthResponse;
-import com.flix.identity.dao.entity.User;
-import com.flix.identity.dao.repository.UserRepository;
+import com.flix.identity.common.dto.AuthResponse;
+import com.flix.identity.entity.User;
+import com.flix.identity.dao.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
