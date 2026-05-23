@@ -26,7 +26,7 @@ export function AppFooter() {
               <div className="bg-[#fafaf5] border border-[#c2c9bb] rounded-sm px-4 py-3">
                 <input type="email" placeholder="email@address.com" className="w-full bg-transparent text-[#6b7280] text-[14px] outline-none" />
               </div>
-              <button className="bg-[#25521f] text-white text-[13px] tracking-widest uppercase py-2.5 rounded-sm hover:bg-[#1e4219] transition-colors">
+              <button className="cursor-pointer bg-[#25521f] text-white text-[13px] tracking-widest uppercase py-2.5 rounded-sm hover:bg-[#1e4219] transition-colors">
                 JOIN THE MOVEMENT
               </button>
             </div>

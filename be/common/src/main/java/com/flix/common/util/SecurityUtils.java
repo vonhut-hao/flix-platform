@@ -16,7 +16,18 @@ public class SecurityUtils {
     }
 
     public static Long getCurrentUserId(Jwt jwt) {
-        return jwt.getClaim(USER_ID);
+        Object claim = jwt.getClaim(USER_ID);
+        if (claim instanceof Number number) {
+            return number.longValue();
+        }
+        if (claim instanceof String str) {
+            try {
+                return Long.parseLong(str);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     public static boolean isAdminRole(Jwt jwt) {

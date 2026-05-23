@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Search, X } from "lucide-react";
+import { CartIcon } from "./CartIcon";
 
 export function MobileHeader() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export function MobileHeader() {
           >
             <Search size={18} />
           </button>
+          <CartIcon count={3} />
         </div>
       </div>
 

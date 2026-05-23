@@ -43,7 +43,7 @@ export function OrderHistory() {
         ))}
       </div>
 
-      <button className="flex items-center justify-center gap-1 text-[#25521f] text-[13px] tracking-widest uppercase self-center hover:underline transition-all py-2">
+      <button className="cursor-pointer flex items-center justify-center gap-1 text-[#25521f] text-[13px] tracking-widest uppercase self-center hover:underline transition-all py-2">
         VIEW ALL ORDERS
         <span className="text-base leading-none">→</span>
       </button>

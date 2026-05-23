@@ -1,9 +1,10 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 interface ApiResponse<T> {
-  code: number;
-  message: string;
-  result: T;
+  code?: number;
+  status?: string;
+  message?: string;
+  data: T;
 }
 
 async function request<T>(
@@ -24,9 +25,22 @@ async function request<T>(
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    throw new Error(
-      (errorBody as { message?: string }).message || `HTTP ${res.status}`
-    );
+    let errorMessage = errorBody.detail || errorBody.message || `HTTP ${res.status}`;
+    
+    if (errorBody.errors) {
+      const firstErrorKey = Object.keys(errorBody.errors)[0];
+      if (firstErrorKey) {
+        const rawMessage = errorBody.errors[firstErrorKey];
+        if (firstErrorKey === 'password' && rawMessage.includes('size must be between 6')) {
+          errorMessage = 'Password must be at least 6 characters long';
+        } else if (rawMessage.includes('well-formed email address')) {
+          errorMessage = 'Please enter a valid email address';
+        } else {
+          errorMessage = rawMessage;
+        }
+      }
+    }
+    throw new Error(errorMessage);
   }
 
   return res.json();

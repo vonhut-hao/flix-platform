@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Search, X } from "lucide-react";
+import { CartIcon } from "./CartIcon";
 
 export function DesktopHeader() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export function DesktopHeader() {
         {/* Left – Logo */}
         <button
           onClick={() => navigate("/")}
-          className="text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-2xl shrink-0"
+          className="cursor-pointer text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-2xl shrink-0"
         >
           GreenLife
         </button>
@@ -36,7 +37,7 @@ export function DesktopHeader() {
               <button
                 key={link.label}
                 onClick={() => navigate(link.path)}
-                className={`relative text-[15px] pb-1 whitespace-nowrap transition-colors ${
+                className={`cursor-pointer relative text-[15px] pb-1 whitespace-nowrap transition-colors ${
                   isActive
                     ? "text-[#25521f] font-['Nimbus_Sans',sans-serif]"
                     : "text-[#42493e] hover:text-[#1a1c19]"
@@ -53,7 +54,7 @@ export function DesktopHeader() {
 
         {/* Right – Green Points + search + account */}
         <div className="flex items-center gap-4 shrink-0">
-          <div className="bg-[#bcf1ad] text-[#25521f] text-[14px] px-3 py-1 rounded-sm whitespace-nowrap">
+          <div className="bg-[#bcf1ad] text-[#25521f] text-[14px] px-3 py-1 rounded-sm whitespace-nowrap cursor-default">
             Green Points: 1,250
           </div>
 
@@ -69,7 +70,7 @@ export function DesktopHeader() {
               />
               <button
                 onClick={() => setSearchOpen(false)}
-                className="text-[#9ca3af] hover:text-[#42493e] transition-colors"
+                className="cursor-pointer text-[#9ca3af] hover:text-[#42493e] transition-colors"
               >
                 <X size={14} />
               </button>
@@ -77,17 +78,25 @@ export function DesktopHeader() {
           ) : (
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-[#42493e] hover:text-[#25521f] transition-colors"
+              className="cursor-pointer text-[#42493e] hover:text-[#25521f] transition-colors"
               aria-label="Tìm kiếm"
             >
               <Search size={18} />
             </button>
           )}
 
+          <CartIcon count={3} />
+
           {/* Account icon */}
           <button
-            onClick={() => navigate(location.pathname === "/profile" ? "/profile" : "/signin")}
-            className={`relative transition-colors pb-1 ${
+            onClick={() => {
+              if (location.pathname === "/profile") {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                navigate("/signin");
+              }
+            }}
+            className={`cursor-pointer relative transition-colors pb-1 ${
               location.pathname === "/profile" ? "text-[#25521f]" : "text-[#42493e] hover:text-[#25521f]"
             }`}
           >

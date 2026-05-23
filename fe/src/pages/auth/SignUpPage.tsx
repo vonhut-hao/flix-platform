@@ -67,7 +67,7 @@ export default function SignUpPage() {
         <div className="absolute top-[-128px] right-[-128px] w-64 h-64 bg-[#e8e8e4] rounded-xl blur-[32px] opacity-50 pointer-events-none" />
 
         {/* Logo */}
-        <button onClick={() => navigate("/")} className="text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-[40px] leading-[56px] self-start">
+        <button onClick={() => navigate("/")} className="text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-[40px] leading-[56px] self-start cursor-pointer">
           GreenLife
         </button>
 
@@ -120,7 +120,7 @@ export default function SignUpPage() {
         {/* Mobile logo header */}
         <button
           onClick={() => navigate("/")}
-          className="md:hidden w-full text-left text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-xl px-6 py-3 border-b border-[#c2c9bb]"
+          className="md:hidden w-full text-left text-[#25521f] font-['Nimbus_Sans',sans-serif] font-bold text-xl px-6 py-3 border-b border-[#c2c9bb] cursor-pointer"
         >
           GreenLife
         </button>
@@ -204,7 +204,7 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#42493e] hover:text-[#25521f] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#42493e] hover:text-[#25521f] transition-colors cursor-pointer"
                 >
                   <svg width="18" height="16" viewBox="0 0 18.3333 16.5" fill="none">
                     <path d={svgPaths.pf0742c0} fill="#42493E" />
@@ -254,7 +254,7 @@ export default function SignUpPage() {
                 <button
                   type="button"
                   onClick={() => setShowConfirm((v) => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#42493e] hover:text-[#25521f] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#42493e] hover:text-[#25521f] transition-colors cursor-pointer"
                 >
                   <svg width="18" height="16" viewBox="0 0 18.3333 16.5" fill="none">
                     <path d={svgPaths.pf0742c0} fill="#42493E" />
@@ -288,7 +288,7 @@ export default function SignUpPage() {
               id="signup-submit"
               onClick={handleSubmit}
               disabled={!canSubmit || submitted}
-              className="w-full bg-[#3d6b35] text-white font-['Nimbus_Sans',sans-serif] font-bold text-[14px] tracking-[0.7px] py-3 rounded-[4px] hover:bg-[#25521f] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-[#3d6b35] text-white font-['Nimbus_Sans',sans-serif] font-bold text-[14px] tracking-[0.7px] py-3 rounded-[4px] hover:bg-[#25521f] disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {submitted ? "Creating Account…" : "Create Account"}
             </button>
@@ -304,7 +304,7 @@ export default function SignUpPage() {
             <button
               id="signup-google"
               onClick={() => authService.googleLogin()}
-              className="w-full border border-[#c2c9bb] flex items-center justify-center gap-2 py-3 rounded-[4px] hover:bg-[#fafaf5] transition-colors"
+              className="w-full border border-[#c2c9bb] flex items-center justify-center gap-2 py-3 rounded-[4px] hover:bg-[#fafaf5] transition-colors cursor-pointer"
             >
               <GoogleIcon />
               <span className="text-[#1a1c19] font-['Nimbus_Sans',sans-serif] font-bold text-[14px] tracking-[0.7px]">Google</span>
@@ -314,7 +314,7 @@ export default function SignUpPage() {
           {/* Sign in link */}
           <p className="text-center text-[#42493e] text-[14px] leading-[21px]">
             Already have an account?{" "}
-            <button onClick={() => navigate("/signin")} className="text-[#25521f] underline hover:text-[#1e4219] transition-colors">
+            <button onClick={() => navigate("/signin")} className="text-[#25521f] underline hover:text-[#1e4219] transition-colors cursor-pointer">
               Sign In
             </button>
           </p>

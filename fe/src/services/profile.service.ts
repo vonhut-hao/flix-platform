@@ -19,12 +19,12 @@ interface CreateOrUpdateProfile {
 export const profileService = {
   async getProfile(id: number): Promise<UserProfile> {
     const res = await api.get<UserProfile>(`/v1/profile/${id}`);
-    return res.result;
+    return res.data;
   },
 
   async updateProfile(data: CreateOrUpdateProfile): Promise<UserProfile> {
     const res = await api.post<UserProfile>('/v1/profile', data);
-    return res.result;
+    return res.data;
   },
 
   async deleteProfile(id: number): Promise<void> {

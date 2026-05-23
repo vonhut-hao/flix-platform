@@ -31,7 +31,7 @@ export function AccountPreferences() {
             <button
               key={pref.label}
               onClick={() => handleClick(pref.label)}
-              className="bg-white border border-[#c2c9bb] rounded-md p-5 flex flex-col gap-3 text-left hover:shadow-md hover:border-[#a2c9a0] transition-all active:scale-[0.98]"
+              className="cursor-pointer bg-white border border-[#c2c9bb] rounded-md p-5 flex flex-col gap-3 text-left hover:shadow-md hover:border-[#a2c9a0] transition-all active:scale-[0.98]"
             >
               <Icon
                 size={20}

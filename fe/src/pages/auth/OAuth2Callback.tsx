@@ -1,13 +1,14 @@
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 export default function OAuth2Callback() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
 
   useEffect(() => {
-    const token = searchParams.get("token");
-    const expiresIn = searchParams.get("expiresIn");
+    const params = new URLSearchParams(location.search || location.hash.replace(/^#/, ''));
+    const token = params.get("token");
+    const expiresIn = params.get("expiresIn");
 
     if (token) {
       localStorage.setItem("accessToken", token);
@@ -19,7 +20,7 @@ export default function OAuth2Callback() {
       // OAuth failed or no token — go back to sign in
       navigate("/signin", { replace: true });
     }
-  }, [searchParams, navigate]);
+  }, [location, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fafaf5]">

@@ -19,7 +19,7 @@ export function GreenImpactMetrics() {
             Accumulated Points
           </span>
           <div className="flex items-baseline gap-1.5">
-            <span className="text-[#1a1c19] font-mono font-bold text-[26px] leading-tight">
+            <span className="text-[#1a1c19] font-['Liberation_Mono',monospace] font-bold text-[26px] leading-tight">
               1,250
             </span>
             <span className="text-[#42493e] text-[13px]">pts</span>
@@ -30,8 +30,8 @@ export function GreenImpactMetrics() {
           <span className="text-[#6b7280] text-[10px] tracking-widest uppercase">
             Total Carbon Offset
           </span>
-          <span className="text-[#1a1c19] font-mono font-bold text-[18px] leading-tight">
-            Saved  32.4  kg  CO2e
+          <span className="text-[#1a1c19] font-['Liberation_Mono',monospace] font-bold text-[18px] leading-tight">
+            Saved 32.4 kg CO2e
           </span>
           <span className="text-[#25521f] text-[11px] italic">Equivalent to planting 2 trees</span>
         </div>
