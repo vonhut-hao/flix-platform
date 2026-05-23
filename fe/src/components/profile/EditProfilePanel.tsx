@@ -105,7 +105,7 @@ export function EditProfilePanel({
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full shrink-0 relative overflow-hidden shadow-sm">
                   {form.avatarUrl ? (
-                    <img src={form.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                    <img src={form.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
                     <>
                       <div className="absolute inset-0 bg-gradient-to-br from-[#8fbf8a] to-[#3d7035]" />

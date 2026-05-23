@@ -37,7 +37,7 @@ export function UserInfoCard() {
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="w-24 h-24 rounded-full overflow-hidden shrink-0 relative shadow-md">
             {profile.avatarUrl ? (
-              <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             ) : (
               <>
                 <div className="absolute inset-0 bg-gradient-to-br from-[#8fbf8a] to-[#3d7035]" />
@@ -81,7 +81,7 @@ export function UserInfoCard() {
       <div className="hidden md:flex items-center gap-6">
         <div className="w-[170px] h-[170px] rounded-full overflow-hidden shrink-0 relative shadow-lg">
           {profile.avatarUrl ? (
-            <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            <img src={profile.avatarUrl} alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           ) : (
             <>
               <div className="absolute inset-0 bg-gradient-to-br from-[#8fbf8a] to-[#3d7035]" />
