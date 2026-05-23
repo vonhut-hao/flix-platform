@@ -1,95 +1,47 @@
-// HTTP API client with auth support
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
-import { tokenStorage } from '../utils/tokenStorage'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
-
-export interface ApiResponse<T> {
-  status?: number
-  message?: string
-  data?: T
-  timestamp?: string
+interface ApiResponse<T> {
+  code: number;
+  message: string;
+  result: T;
 }
 
-export interface ApiError {
-  status?: number
-  title?: string
-  detail?: string
-  errors?: Record<string, string>
-  [key: string]: any
+async function request<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<ApiResponse<T>> {
+  const token = localStorage.getItem('accessToken');
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers: { ...headers, ...(options.headers as Record<string, string>) },
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(
+      (errorBody as { message?: string }).message || `HTTP ${res.status}`
+    );
+  }
+
+  return res.json();
 }
 
-class ApiClient {
-  private baseUrl: string
+export const api = {
+  get: <T>(endpoint: string) => request<T>(endpoint, { method: 'GET' }),
 
-  constructor(baseUrl: string = API_BASE_URL) {
-    this.baseUrl = baseUrl
-  }
-
-  private getHeaders(): Record<string, string> {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    }
-
-    const token = tokenStorage.getToken()
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    return headers
-  }
-
-  private async handleResponse<T>(response: Response): Promise<T> {
-    if (!response.ok) {
-      let errorData: ApiError = {
-        status: response.status,
-        detail: response.statusText,
-      }
-
-      try {
-        errorData = await response.json()
-      } catch {
-        // Keep default error data
-      }
-
-      throw errorData
-    }
-
-    // Handle 204 No Content
-    if (response.status === 204) {
-      return {} as T
-    }
-
-    return response.json() as Promise<T>
-  }
-
-  async post<T>(path: string, body?: unknown): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
+  post: <T>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, {
       method: 'POST',
-      headers: this.getHeaders(),
-      body: body ? JSON.stringify(body) : undefined,
-    })
+      body: JSON.stringify(body),
+    }),
 
-    return this.handleResponse<T>(response)
-  }
+  delete: <T>(endpoint: string) => request<T>(endpoint, { method: 'DELETE' }),
+};
 
-  async get<T>(path: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: 'GET',
-      headers: this.getHeaders(),
-    })
-
-    return this.handleResponse<T>(response)
-  }
-
-  async delete<T>(path: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      method: 'DELETE',
-      headers: this.getHeaders(),
-    })
-
-    return this.handleResponse<T>(response)
-  }
-}
-
-export const apiClient = new ApiClient()
+export { API_BASE };
