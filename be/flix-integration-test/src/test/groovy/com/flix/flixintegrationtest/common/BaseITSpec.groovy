@@ -1,31 +1,32 @@
 package com.flix.flixintegrationtest.common
 
 import com.flix.app.FlixPlaftformApplication
+import com.flix.common.dto.ApiResponse
 import com.flix.common.enums.Role
-import com.flix.identity.entity.User
+import com.flix.identity.common.enums.AuthProvider
 import com.flix.identity.dao.UserRepository
-import io.restassured.RestAssured
-import io.restassured.builder.RequestSpecBuilder
-import io.restassured.http.ContentType
-import lombok.extern.slf4j.Slf4j
+import com.flix.identity.entity.User
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.annotation.Import
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.web.servlet.client.RestTestClient
 import spock.lang.Specification
 
 @SpringBootTest(
-        classes = FlixPlaftformApplication,
+        classes = FlixPlaftformApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Import(TestcontainersConfiguration.class)
 @ActiveProfiles("test")
+@AutoConfigureRestTestClient
 abstract class BaseITSpec extends Specification {
 
     @LocalServerPort
-    int port;
+    int port
 
     @Autowired
     JdbcTemplate jdbc;
@@ -33,14 +34,86 @@ abstract class BaseITSpec extends Specification {
     @Autowired
     UserRepository userRepository;
 
-    def setup() {
-        RestAssured.port = port
-        RestAssured.baseURI = "http://localhost"
-        RestAssured.basePath = "/v1"
-        RestAssured.requestSpecification = new RequestSpecBuilder()
-                .setContentType(ContentType.JSON)
-                .build()
+    @Autowired
+    RestTestClient client;
+
+    protected String BASE_API;
+
+    void setup() {
+        BASE_API = "http://localhost:${port}/v1"
     }
+
+    protected getApiResponse(String endpoint, String token) {
+        if (token != null) {
+            return client.get()
+                    .uri(BASE_API + endpoint)
+                    .header("Authorization", "Bearer ${token}")
+                    .exchange()
+        } else {
+            return client.get()
+                    .uri(BASE_API + endpoint)
+                    .exchange()
+        }
+    }
+
+    protected postRequest(String endpoint, Map body, String token = null) {
+        if (token != null) {
+            return client.post()
+                    .uri(BASE_API + endpoint)
+                    .header("Authorization", "Bearer ${token}")
+                    .body(body)
+                    .exchange()
+        } else {
+            return client.post()
+                    .uri(BASE_API + endpoint)
+                    .body(body)
+                    .exchange()
+        }
+    }
+
+    protected putRequest(String endpoint, Map body, String token = null) {
+        if (token != null) {
+            return client.put()
+                    .uri(BASE_API + endpoint)
+                    .header("Authorization", "Bearer ${token}")
+                    .body(body)
+                    .exchange()
+        } else {
+            return client.put()
+                    .uri(BASE_API + endpoint)
+                    .body(body)
+                    .exchange()
+        }
+    }
+
+    protected deleteRequest(String endpoint, String token = null) {
+        if (token != null) {
+            return client.delete()
+                    .uri(BASE_API + endpoint)
+                    .header("Authorization", "Bearer ${token}")
+                    .exchange()
+        } else {
+            return client.delete()
+                    .uri(BASE_API + endpoint)
+                    .exchange()
+        }
+    }
+
+    protected patchRequest(String endpoint, Map body, String token = null) {
+        if (token != null) {
+            return client.patch()
+                    .uri(BASE_API + endpoint)
+                    .header("Authorization", "Bearer ${token}")
+                    .body(body)
+                    .exchange()
+        } else {
+            return client.patch()
+                    .uri(BASE_API + endpoint)
+                    .body(body)
+                    .exchange()
+        }
+    }
+
 
     def cleanup() {
         def tables = jdbc.queryForList("""
@@ -55,11 +128,10 @@ abstract class BaseITSpec extends Specification {
     }
 
     protected String loginAndGetToken(String username, String password) {
-        def resp = RestAssured.given()
-                .basePath("/v1")
-                .body([username: username, password: password])
-                .post("/auth/login").body().jsonPath()
-        resp.getString("data.accessToken")
+        def resp = postRequest("/auth/login", [username: username, password: password])
+                .returnResult(ApiResponse)
+        def data = resp.responseBody?.data as Map
+        data?.accessToken
     }
 
     protected User createAdminUser() {
@@ -72,8 +144,10 @@ abstract class BaseITSpec extends Specification {
                 isVerified: true,
         )
         user.roles.add(Role.ADMIN)
+        user.authProviders.add(AuthProvider.LOCAL)
         userRepository.save(user)
     }
+
 
     protected User createNormalUser() {
         def passwordEncode = '$2a$12$pmIXxQ7H.iNsd6BrXRbC/..DoMMuuFEfKml33imgyOuZklipEtpZ.'
@@ -85,14 +159,17 @@ abstract class BaseITSpec extends Specification {
                 isVerified: true,
         )
         user.roles.add(Role.USER)
+        user.authProviders.add(AuthProvider.LOCAL)
         userRepository.save(user)
     }
 
     protected String getAdminToken() {
-        loginAndGetToken("admin", "Admin@123")
+        return loginAndGetToken("admin", "Admin@123")
     }
 
     protected String getNormalUserToken() {
-        loginAndGetToken("testNormalUser", "Admin@123")
+        return loginAndGetToken("testNormalUser", "Admin@123")
     }
+
+
 }

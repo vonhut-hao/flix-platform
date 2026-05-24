@@ -1,10 +1,11 @@
 package com.flix.flixintegrationtest.identity.api.auth
 
+import com.flix.common.dto.ApiResponse
 import com.flix.common.enums.Role
 import com.flix.flixintegrationtest.common.BaseITSpec
 import com.flix.flixintegrationtest.identity.config.BaseIT
-import io.restassured.RestAssured
 import org.springframework.http.HttpStatus
+import org.springframework.http.ProblemDetail
 
 class AuthIT extends BaseITSpec {
 
@@ -15,24 +16,25 @@ class AuthIT extends BaseITSpec {
         createAdminUser()
 
         when:
-        def response = RestAssured.given()
-                .body([username: "admin@flix.com", password: "Admin@123"])
-                .post(BaseIT.LOGIN_API)
+        def response = postRequest(BaseIT.LOGIN_API, [username: "admin@flix.com", password: "Admin@123"])
+                .returnResult(ApiResponse)
 
         then:
-        response.statusCode() == 200
-        response.body().jsonPath().getString("data.accessToken") != null
+        response.status == HttpStatus.OK
+        response.responseBody.data.accessToken != null
     }
 
     def "should fail login with invalid credentials"() {
-        when:
-        def response = RestAssured.given()
-                .body([username: "asdasd", password: "asdasd"])
-                .post(BaseIT.LOGIN_API)
-        then:
-        response.statusCode() == 401
-        response.body().jsonPath().getString("detail").equalsIgnoreCase("Invalid username or password")
+        given:
+        def invalidUserCredential = [username: "asdasd", password: "asdasd"]
 
+        when:
+        def resp = postRequest(BaseIT.LOGIN_API, invalidUserCredential)
+                .returnResult(ProblemDetail)
+
+        then:
+        resp.status == HttpStatus.UNAUTHORIZED
+        resp.responseBody.detail == "Invalid username or password"
     }
 
     //Register Tests
@@ -42,15 +44,14 @@ class AuthIT extends BaseITSpec {
         def userData = [username: "test", email: "test@gmail.com", password: "Test@123"]
 
         when:
-        def response = RestAssured.given()
-                .body(userData)
-                .post(api)
+        def response = postRequest(api, userData)
+                .returnResult(ApiResponse)
 
         then:
         def userSaved = userRepository.findByEmail(userData.email).get()
 
-        response.statusCode() == HttpStatus.CREATED.value()
-        response.body().jsonPath().getString("data.accessToken") != null
+        response.status == HttpStatus.CREATED
+        response.responseBody.data.accessToken != null
         userSaved.username == userData.username
         userSaved.email == userData.email
         userSaved.password != userData.password
@@ -66,16 +67,14 @@ class AuthIT extends BaseITSpec {
 
     def "should fail register with invalid data"() {
         when:
-        def responseNormalUser = RestAssured.given()
-                .body(userDatas)
-                .post(BaseIT.REGISTER_NORMAL_API)
-        def responseVipUser = RestAssured.given()
-                .body(userDatas)
-                .post(BaseIT.REGISTER_VIP_API)
+        def responseNormalUser = postRequest(BaseIT.REGISTER_NORMAL_API, userDatas)
+                .returnResult(ProblemDetail)
+        def responseVipUser = postRequest(BaseIT.REGISTER_VIP_API, userDatas)
+                .returnResult(ProblemDetail)
 
         then:
-        responseNormalUser.statusCode() == HttpStatus.BAD_REQUEST.value()
-        responseVipUser.statusCode() == HttpStatus.BAD_REQUEST.value()
+        responseNormalUser.status == HttpStatus.BAD_REQUEST
+        responseVipUser.status == HttpStatus.BAD_REQUEST
 
         where:
         scenario               | userDatas
@@ -86,5 +85,19 @@ class AuthIT extends BaseITSpec {
         "missing password"     | [username: "test", email: "asdasda@gmail.com", password: ""]
     }
 
+    def "should return true when provider is local"() {
+        given:
+        createNormalUser()
+        String token = getNormalUserToken()
+
+        when:
+        def resp = getApiResponse(BaseIT.IS_LOCAL_PROVIDER, token)
+                .returnResult(ApiResponse)
+
+        then:
+        resp.status == HttpStatus.OK
+        resp.responseBody.data == true
+
+    }
 
 }

@@ -130,4 +130,14 @@ public class AuthService {
         return generateToken(user.getId(), user.getUsername(), roles);
     }
 
+    public boolean checkProvider(Long userId) {
+        log.info("Checking if local provider for user {}", userId);
+        boolean isLocal = userRepository.findById(userId)
+                .map(user -> user.getAuthProviders().contains(AuthProvider.LOCAL))
+                .orElse(false);
+        log.debug("Local provider for user {} is {}", userId, isLocal);
+
+        return isLocal;
+    }
+
 }
